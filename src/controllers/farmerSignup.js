@@ -1,34 +1,24 @@
 const Farmer = require('../models/farmer');
 const bcrypt = require('bcrypt');
+const { generateToken } = require('../utils/jwt');
 
 exports.signup = async (req, res) => {
   try {
-    const { names, telephone, district, sector, cell, village, email, password } = req.body;
-
-    // Check if email already exists
-    const existing = await Farmer.findOne({ email });
-    if (existing) {
+    const { names, telephone, district, sector, cell, village, email, password, confirmPassword } = req.body;
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+    const existingFarmer = await Farmer.findOne({ email });
+    if (existingFarmer) {
       return res.status(400).json({ message: 'Email already exists' });
     }
-
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const farmer = new Farmer({
-      names,
-      telephone,
-      district,
-      sector,
-      cell,
-      village,
-      email,
-      password: hashedPassword
-    });
-
+    const farmer = new Farmer({ names, telephone, district, sector, cell, village, email, password: hashedPassword });
     await farmer.save();
-    res.status(201).json({ message: 'Registration successful!' });
+    const token = generateToken({ id: farmer._id, role: 'farmer' });
+    res.status(201).json({ farmer, token });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const farmerRoutes = require('./routes/farmer');
 const agronomistRoutes = require('./routes/agronomist');
+const supplierRoutes = require('./routes/supplier');
 
 dotenv.config();
 
@@ -15,6 +16,10 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use('/api/farmer', farmerRoutes);
 app.use('/api/agronomist', agronomistRoutes);
+app.use('/api/supplier', supplierRoutes);
+
+// Swagger setup
+require('./swagger')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
