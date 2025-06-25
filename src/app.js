@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const farmerRoutes = require('./routes/farmer');
 const agronomistRoutes = require('./routes/agronomist');
 const supplierRoutes = require('./routes/supplier');
+const medicineRoutes = require('./routes/medicine');
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/farmer', farmerRoutes);
 app.use('/api/agronomist', agronomistRoutes);
 app.use('/api/supplier', supplierRoutes);
+app.use('/api/medicine', medicineRoutes);
 
 // Swagger setup
 require('./swagger')(app);

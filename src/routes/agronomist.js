@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Agronomist = require('../models/agronomist');
 const agronomistSignupController = require('../controllers/agronomistSignup');
 const agronomistLoginController = require('../controllers/agronomistLogin');
 const auth = require('../middleware/auth');
